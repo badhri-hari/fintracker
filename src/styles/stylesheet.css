@@ -1,0 +1,246 @@
+html.login-page {
+  background-color: #528265;
+}
+
+.login-screen-body {
+  background-color: #528265;
+}
+
+.login-screen-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4%;
+}
+
+.login-screen-logo {
+  width: 70vh;
+}
+
+@font-face {
+  font-family: "Hammersmith One Regular";
+  src: url(./hammersmith-one_file.ttf);
+}
+
+.login-screen-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-screen-button-container button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.login-screen-button {
+  width: fit-content;
+  transition: transform 0.3s ease;
+}
+
+.login-screen-button:hover {
+  transform: scale(1.1);
+}
+
+a {
+  color: black;
+}
+
+.alert-container {
+  position: fixed; /* Fixed position to stay at the top */
+  top: 6%; /* Align to the top */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for exact centering */
+  width: 50%; /* Set the desired width */
+  z-index: 1000; /* Ensure it's above other elements */
+}
+
+.slide-in {
+  transform: translateY(0);
+  height: auto;
+  margin: 1.2rem; /* Apply the margin when sliding in */
+}
+
+header {
+  background-color: #528265;
+  display: flex;
+  align-content: end;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.pill-nav {
+  padding-left: 22%;
+  padding-top: 0.85%;
+  display: flex;
+  justify-content: space-between; /* Distribute items evenly */
+  width: 280%; /* Occupy 90% of the header space */
+  margin: 0 auto; /* Center the navigation in the header */
+  z-index: 1;
+}
+
+.pill-nav a {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 13px;
+  margin: 2px;
+  text-decoration: none;
+  font-size: 17px;
+  border-radius: 5px;
+  flex: 1;
+  background-color: #476c56;
+  margin-right: 2%;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.pill-nav a:hover {
+  background-color: #4b765d;
+  transform: scale(1.05);
+}
+
+.pill-nav a.active {
+  background-color: #385944;
+}
+
+.header-profile-icon-container {
+  margin-left: 10px;
+  height: 60px;
+  display: inline-block;
+  position: relative;
+  z-index: 20;
+  overflow: hidden;
+  padding-top: 3px;
+}
+
+.header-profile-icon-container img {
+  height: 52.5px;
+  transition: all 0.5s;
+  border-radius: 100px;
+}
+
+.header-profile-icon-container:hover img {
+  transform: rotate(-10deg);
+}
+
+footer {
+  background-color: #528265;
+  padding: 15px;
+}
+
+.home-screen-body {
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.arrow-container {
+  display: flex;
+  align-items: center;
+  position: relative; /* Ensure the icon positions relative to the box */
+  transition: all 0.3s ease; /* Smooth transition for size changes */
+}
+
+.arrow-icon {
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s ease; /* Transition for the opacity */
+}
+
+.arrow-container:hover .arrow-icon {
+  opacity: 1; /* Visible on hover */
+}
+
+.transactionform-fade-enter {
+  opacity: 0;
+  transition: opacity 0.1s ease-in;
+}
+
+.transactionform-fade-enter.transactionform-fade-enter-active {
+  opacity: 1;
+}
+
+.stat-container {
+  flex-grow: 1;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+@keyframes scaleAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.scale-animation {
+  animation: scaleAnimation 0.5s ease-in-out;
+  animation-delay: 0.8s;
+}
+
+.reports-graph-heading {
+  transform: translateX(-50%) scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.reports-graph-heading:hover {
+  transform: translateX(-50%) scale(1.02);
+}
+
+.dark-datepicker {
+  background-color: rgb(100, 100, 100);
+}
+
+.fade-appear,
+.fade-enter {
+  opacity: 0;
+  z-index: 1;
+}
+.fade-appear-active,
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 450ms linear 250ms;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit.fade-exit-active {
+  opacity: 0;
+  transition: opacity 150ms linear;
+}
+
+main {
+  flex-grow: 1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+nav {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url(./montserrat_file.ttf);
+}
