@@ -78,14 +78,14 @@ export default function CategoryTable() {
         name: newCategoryName,
         categoryId: newCategoryId,
         userId: auth?.currentUser?.uid,
-        created_at: new Date(),
+        dateCreated: new Date(),
       });
 
       setNewCategoryName("");
 
       toast({
         title: "Success!",
-        description: `${newCategoryName} was added successfully.`,
+        description: `${newCategoryName} was created successfully.`,
         status: "success",
         duration: 5000,
         isClosable: true,
