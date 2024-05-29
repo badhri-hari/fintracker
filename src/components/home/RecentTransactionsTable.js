@@ -75,34 +75,35 @@ export default function RecentTransactionsTable() {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true); // Makes the RecentTransactionsTable component display a loading animation
 
     const transactionsQuery = query(
-      collection(db, "transactions"),
-      where("userId", "==", userID),
-      orderBy("dateAdded", "desc"),
-      limit(4)
+      collection(db, "transactions"), // Queries only the documents present in the 'transactions' collection
+      where("userId", "==", userID), // Only selects transactions that belong to the current user
+      orderBy("dateAdded", "desc"), // Sorts all the transactions so that the latest transactions are on the top
+      limit(5) // Only selects the recent 5 transactions
     );
 
     const unsubscribe = onSnapshot(
       transactionsQuery,
       (snapshot) => {
         const transactionsWithCategoryNames = snapshot.docs.map((doc) => ({
-          ...doc.data(),
+          ...doc.data(), // The field values in a transaction doc
           categoryName: categoriesArray[doc.data().categoryId],
-          dateAdded: doc.data().dateAdded.toDate(),
-        }));
-        setTransactions(transactionsWithCategoryNames);
-        setIsLoading(false);
+          dateAdded: doc.data().dateAdded.toDate(), // Ensures that only the date is shown, not the time
+        })); // transactionsWithCategoryNames takes each transaction fetched by transactionsQuery and adds the
+        // category name it belongs to, using the `categoryId` field in the transaction docs.
+        setTransactions(transactionsWithCategoryNames); //
+        setIsLoading(false); // Removes loading animation
       },
       (error) => {
-        console.error("Error fetching transactions: ", error);
-        setIsLoading(false);
+        console.error("Error fetching transactions: ", error); // Displays error message in console for debugging
+        setIsLoading(false); // Removes loading animation
       }
     );
 
-    return () => unsubscribe();
-  }, [userID, categoriesArray]);
+    return () => unsubscribe(); // Cleanup function which helps ensure that the transactions are current
+  }, [userID, categoriesArray]); // Dependencies of the useEffect function which cause it to execute when they change
 
   function formatAmount(amount) {
     const formattedAmount = new Intl.NumberFormat("en-IN", {
