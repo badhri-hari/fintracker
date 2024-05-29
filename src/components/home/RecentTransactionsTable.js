@@ -75,8 +75,6 @@ export default function RecentTransactionsTable() {
   }, []);
 
   useEffect(() => {
-    if (!userID || Object.keys(categoriesArray).length === 0) return;
-
     setIsLoading(true);
 
     const transactionsQuery = query(
