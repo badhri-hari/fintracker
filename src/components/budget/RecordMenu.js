@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { MdMoreVert } from "react-icons/md";
+
 import DeleteTransactionModal from "./DeleteTransactionModal";
 import EditTransactionModal from "./EditTransactionModal";
 

@@ -23,7 +23,6 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import { ThemeContext } from "../settings/ThemeContext";
 
 export default function HomeTable() {
@@ -33,9 +32,7 @@ export default function HomeTable() {
   const [categoriesArray, setCategoriesArray] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [userID, setUserID] = useState(null);
-
   const [showTransactions, setShowTransactions] = useState(false);
-
   const tableRef = useRef(null);
 
   const toggleTransactions = () => {
@@ -58,7 +55,7 @@ export default function HomeTable() {
       (snapshot) => {
         const categoriesArray = {};
         snapshot.forEach((doc) => {
-          categoriesArray[doc.id] = doc.data().name;
+          categoriesArray[doc.id] = doc.data().categoryName;
         });
         setCategoriesArray(categoriesArray);
       }
@@ -69,36 +66,39 @@ export default function HomeTable() {
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      setUserID(user.uid);
+      if (user) {
+        setUserID(user.uid);
+      }
     });
 
     return () => unsubscribeAuth();
   }, []);
 
   useEffect(() => {
-    setIsLoading(true); // Makes the HomeTable component display a loading animation
+    if (!userID || Object.keys(categoriesArray).length === 0) return;
+
+    setIsLoading(true);
 
     const transactionsQuery = query(
-      collection(db, "transactions"), // Queries only the documents present in the 'transactions' collection
-      where("userId", "==", userID), // Only selects transactions that belong to the current user
-      orderBy("dateAdded", "desc"), // Sorts all the transactions so that the latest transactions are on top
-      limit(4) // Only selects the recent 4 transactions
+      collection(db, "transactions"),
+      where("userId", "==", userID),
+      orderBy("dateAdded", "desc"),
+      limit(4)
     );
 
     const unsubscribe = onSnapshot(
       transactionsQuery,
       (snapshot) => {
-        setTransactions( // setTransactions creates an array called 'transactions' with the transactions from the database
-          snapshot.docs.map((doc) => ({ // 'doc' refers to one document from the database
-            ...doc.data(),
-            categoryName: categoriesArray[doc.data().categoryId],
-            dateAdded: doc.data().dateAdded.toDate(), // Ensures that only the date of each transaction is shown, not the time
-          }))
-        );
-        setIsLoading(false); // Removes the loading animation
+        const transactionsWithCategoryNames = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          categoryName: categoriesArray[doc.data().categoryId],
+          dateAdded: doc.data().dateAdded.toDate(),
+        }));
+        setTransactions(transactionsWithCategoryNames);
+        setIsLoading(false);
       },
       (error) => {
-        console.error("Error fetching transactions: ", error); // Displays an error message in the console
+        console.error("Error fetching transactions: ", error);
         setIsLoading(false);
       }
     );
@@ -115,7 +115,7 @@ export default function HomeTable() {
 
     let color;
     if (colorMode === "dark") {
-      color = amount < 0 ? " #ff6347" : "white";
+      color = amount < 0 ? "#ff6347" : "white";
     } else {
       color = amount < 0 ? "red" : "green";
     }

@@ -28,11 +28,11 @@ import {
 
 import { ThemeContext } from "../components/settings/ThemeContext";
 
-import RecordMenu from "../components/budget/RecordMenu";
 import TransactionFilter from "../components/budget/TransactionFilter";
 import DateFilter from "../components/budget/DateFilter";
 import AmountFilter from "../components/budget/AmountFilter";
 import CategoryFilter from "../components/budget/CategoryFilter";
+import RecordMenu from "../components/budget/RecordMenu";
 
 export default function Budget() {
   const { colorMode } = useContext(ThemeContext);
@@ -41,7 +41,7 @@ export default function Budget() {
   const [transactionsArray, setTransactionsArray] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentUserUID, setCurrentUserUID] = useState(auth?.currentUser?.uid);
-  const [categoriesArray, setCategoriesArray] = useState([]);
+  const [categoriesMap, setCategoriesMap] = useState(new Map());
   const [transactionFilterOption, setTransactionFilterOption] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -57,11 +57,11 @@ export default function Budget() {
     const unsubscribeCategories = onSnapshot(
       collection(db, "categories"),
       (snapshot) => {
-        const categoriesArray = {};
+        const categories = new Map();
         snapshot.forEach((doc) => {
-          categoriesArray[doc.id] = doc.data().name;
+          categories.set(doc.id, doc.data().categoryName);
         });
-        setCategoriesArray(categoriesArray);
+        setCategoriesMap(categories);
       }
     );
 
@@ -143,14 +143,13 @@ export default function Budget() {
           transactionsQuery,
           where("amount", ">=", maxAmount)
         );
-      } else if (maxAmount === 0) {
       }
     }
 
     if (selectedCategory) {
       transactionsQuery = query(
         transactionsQuery,
-        where("category", "==", selectedCategory)
+        where("categoryId", "==", selectedCategory)
       );
     }
 
@@ -163,7 +162,7 @@ export default function Budget() {
     return transactionsQuery;
   };
 
-  const updateTransactions = (query) => {
+  const updateTransactions = (query, categoriesMap) => {
     const unsubscribe = onSnapshot(
       query,
       (snapshot) => {
@@ -171,7 +170,7 @@ export default function Budget() {
           snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-            categoryName: categoriesArray[doc.data().categoryId],
+            categoryName: categoriesMap.get(doc.data().categoryId),
             dateAdded: doc.data().dateAdded.toDate(),
           }))
         );
@@ -205,7 +204,7 @@ export default function Budget() {
   }, [navigate]);
 
   useEffect(() => {
-    if (!currentUserUID) return;
+    if (!currentUserUID || !categoriesMap.size) return;
 
     const initialQuery = buildCombinedQuery(
       currentUserUID,
@@ -216,8 +215,17 @@ export default function Budget() {
       maxAmount,
       selectedCategory
     );
-    updateTransactions(initialQuery);
-  }, [currentUserUID, transactionFilterOption, startTimestamp, endTimestamp, minAmount, maxAmount, selectedCategory, updateTransactions]);
+    updateTransactions(initialQuery, categoriesMap);
+  }, [
+    currentUserUID,
+    transactionFilterOption,
+    startTimestamp,
+    endTimestamp,
+    minAmount,
+    maxAmount,
+    selectedCategory,
+    categoriesMap,
+  ]);
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("en-IN", {
@@ -233,13 +241,13 @@ export default function Budget() {
         Your Budget
       </Heading>
       <Divider />
-      <Flex gap="4" p="4" alignItems="stretch" mt="10px">
+      <Flex gap="5" p="4" alignItems="stretch" minHeight="200px">
         <Box
           bg={`${colorMode === "dark" ? "rgb(150, 150, 150)" : "gray.50"}`}
           p="4"
           borderRadius="md"
           flex="1"
-          h="100%"
+          height="full"
         >
           <TransactionFilter
             onFilterChange={(option) => setTransactionFilterOption(option)}
@@ -250,7 +258,7 @@ export default function Budget() {
           p="4"
           borderRadius="md"
           flex="1"
-          h="100%"
+          height="full"
         >
           <DateFilter
             startDate={startDate}
@@ -264,7 +272,7 @@ export default function Budget() {
           p="4"
           borderRadius="md"
           flex="1"
-          h="100%"
+          height="full"
         >
           <AmountFilter
             onFilterChange={(min, max) => {
@@ -277,7 +285,7 @@ export default function Budget() {
           p="4"
           borderRadius="md"
           flex="1"
-          h="100%"
+          height="full"
         >
           <CategoryFilter
             selectedCategory={selectedCategory}

@@ -43,7 +43,7 @@ export default function ExpenseForm() {
 
     const unsubscribe = onSnapshot(categoriesQuery, (snapshot) => {
       const updatedCategories = snapshot.docs.map((doc) => ({
-        name: doc.data().name,
+        categoryName: doc.data().categoryName,
         categoryId: doc.id,
       }));
       setUserCategories(updatedCategories);
@@ -57,6 +57,19 @@ export default function ExpenseForm() {
       toast({
         title: "Oops!",
         description: "Please fill out all the fields.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        variant: "left-accent",
+      });
+      return;
+    }
+
+    if (transactionName.length > 20) {
+      toast({
+        title: "Oops!",
+        description:
+          "The transaction's name cannot be more than 20 characters.",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -97,7 +110,8 @@ export default function ExpenseForm() {
       console.error("Error adding document: ", error);
       toast({
         title: "Uh oh!",
-        description: "An error occurred, please try again later.",
+        description:
+          "An error occurred in adding the expense, please try again later.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -107,12 +121,9 @@ export default function ExpenseForm() {
   };
 
   const handleCategoryChange = (event) => {
-    const value = event.target.value;
-    const category = userCategories.find((c) => c.categoryId === value);
-    if (category) {
-      setTransactionCategory(category.categoryId);
-    }
-    if (value === "add-new-category") {
+    const selectedCategoryId = event.target.value;
+    setTransactionCategory(selectedCategoryId);
+    if (selectedCategoryId === "add-new-category") {
       navigate("/settings");
     }
   };
@@ -169,7 +180,7 @@ export default function ExpenseForm() {
           >
             {userCategories.map((category) => (
               <option key={category.categoryId} value={category.categoryId}>
-                {category.name}
+                {category.categoryName}
               </option>
             ))}
             <option value="add-new-category">+ Add a New Category</option>

@@ -43,7 +43,7 @@ export default function IncomeForm() {
 
     const unsubscribe = onSnapshot(categoriesQuery, (snapshot) => {
       const updatedCategories = snapshot.docs.map((doc) => ({
-        name: doc.data().name,
+        categoryName: doc.data().categoryName,
         categoryId: doc.id,
       }));
       setUserCategories(updatedCategories);
@@ -70,6 +70,19 @@ export default function IncomeForm() {
       return;
     }
 
+    if (transactionName.length > 20) {
+      toast({
+        title: "Oops!",
+        description:
+          "The transaction's name cannot be more than 20 characters.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        variant: "left-accent",
+      });
+      return;
+    }
+
     if (income > 100000) {
       toast({
         title: "Oops!",
@@ -86,7 +99,7 @@ export default function IncomeForm() {
       await addDoc(transactionsCollectionReference, {
         transactionName: transactionName, // Name of transaction
         amount: income, // The amount of income specified
-        categoryId: transactionCategory, // The category of that the transaction belongs in
+        categoryId: transactionCategory, // The category ID that the transaction belongs in
         dateAdded: new Date(), // The date and time when the transaction was added
         userId: userId, // User ID
       });
@@ -100,10 +113,11 @@ export default function IncomeForm() {
         variant: "left-accent",
       });
     } catch (error) {
-      console.error("Error adding document: ", error); // Displays an error message in the console
+      console.error("Error adding document:", error); // Displays an error message in the console
       toast({
         title: "Uh oh!",
-        description: "An error occurred, please try again later.",
+        description:
+          "An error occurred in adding the income, please try again later.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -117,12 +131,9 @@ export default function IncomeForm() {
   const parse = (val) => parseFloat(val.replace(/₹/g, "").replace(/,/g, ""));
 
   const handleCategoryChange = (event) => {
-    const value = event.target.value;
-    const category = userCategories.find((c) => c.categoryId === value);
-    if (category) {
-      setTransactionCategory(category.categoryId);
-    }
-    if (value === "add-new-category") {
+    const selectedCategoryId = event.target.value;
+    setTransactionCategory(selectedCategoryId);
+    if (selectedCategoryId === "add-new-category") {
       navigate("/settings");
     }
   };
@@ -161,7 +172,7 @@ export default function IncomeForm() {
           >
             {userCategories.map((category) => (
               <option key={category.categoryId} value={category.categoryId}>
-                {category.name}
+                {category.categoryName}
               </option>
             ))}
             <option value="add-new-category">+ Add a New Category</option>

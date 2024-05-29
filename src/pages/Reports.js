@@ -31,7 +31,8 @@ export default function Reports() {
       }
     });
 
-    return () => { // Cleanup function
+    return () => {
+      // Cleanup function
       unsubscribeAuth();
     };
   }, [navigate]);

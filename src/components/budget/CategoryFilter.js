@@ -8,28 +8,27 @@ import {
   Divider,
   VStack,
 } from "@chakra-ui/react";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db, auth } from "../../config/firebase";
+import { collection, query, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 import { ThemeContext } from "../settings/ThemeContext";
 
-function CategoryFilter({ onSelectCategory }) {
+export default function CategoryFilter({ selectedCategory, onSelectCategory }) {
   const { colorMode } = useContext(ThemeContext);
 
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     async function fetchCategories() {
-      const categoriesQuery = query(
-        collection(db, "categories"),
-        where("userId", "==", auth?.currentUser?.uid)
-      );
+      const categoriesQuery = query(collection(db, "categories"));
 
       try {
         const querySnapshot = await getDocs(categoriesQuery);
-        const categoryNames = querySnapshot.docs.map((doc) => doc.data().name);
-        setCategories(categoryNames);
+        const categoryList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().categoryName,
+        }));
+        setCategories(categoryList);
       } catch (error) {
         console.error("Error fetching categories: ", error);
       }
@@ -40,12 +39,10 @@ function CategoryFilter({ onSelectCategory }) {
 
   const handleCategoryChange = (e) => {
     const selectedValue = e.target.value;
-    setSelectedCategory(selectedValue);
     onSelectCategory(selectedValue);
   };
 
   const handleClearFilter = () => {
-    setSelectedCategory("");
     onSelectCategory("");
   };
 
@@ -72,8 +69,8 @@ function CategoryFilter({ onSelectCategory }) {
         mb={"3px"}
       >
         {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
+          <option key={category.id} value={category.id}>
+            {category.name}
           </option>
         ))}
       </Select>
@@ -90,5 +87,3 @@ function CategoryFilter({ onSelectCategory }) {
     </Box>
   );
 }
-
-export default CategoryFilter;

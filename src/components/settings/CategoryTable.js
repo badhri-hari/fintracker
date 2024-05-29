@@ -46,7 +46,7 @@ export default function CategoryTable() {
       );
       const unsubscribe = onSnapshot(categoryDatabase, (querySnapshot) => {
         const categories = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
+          categoryId: doc.categoryId,
           ...doc.data(),
         }));
         setCategories(categories);
@@ -69,13 +69,25 @@ export default function CategoryTable() {
       return;
     }
 
+    if (newCategoryName.length > 25) {
+      toast({
+        title: "Oops!",
+        description: "The category's name cannot be more than 25 characters.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        variant: "left-accent",
+      });
+      return;
+    }
+
     const newCategoryId =
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15);
 
     try {
       await setDoc(doc(db, "categories", newCategoryId), {
-        name: newCategoryName,
+        categoryName: newCategoryName,
         categoryId: newCategoryId,
         userId: auth?.currentUser?.uid,
         dateCreated: new Date(),
@@ -104,7 +116,7 @@ export default function CategoryTable() {
     }
   };
 
-  const handleEditCategory = async (id) => {
+  const handleEditCategory = async (categoryId) => {
     if (editingCategoryName.trim() === "") {
       toast({
         title: "Oops!",
@@ -117,10 +129,10 @@ export default function CategoryTable() {
       return;
     }
 
-    const categoryRef = doc(db, "categories", id);
+    const categoryRef = doc(db, "categories", categoryId);
     const batch = writeBatch(db);
 
-    batch.update(categoryRef, { name: editingCategoryName });
+    batch.update(categoryRef, { categoryName: editingCategoryName });
 
     try {
       await batch.commit();
@@ -149,7 +161,8 @@ export default function CategoryTable() {
     }
   };
 
-  const handleDeleteCategory = async (categoryId) => { // handleDeleteCategory requires the 'categoryId' of the category that is to be deleted
+  const handleDeleteCategory = async (categoryId) => {
+    // handleDeleteCategory requires the 'categoryId' of the category that is to be deleted
     const batch = writeBatch(db);
 
     const transactionsQuery = query(
@@ -160,7 +173,11 @@ export default function CategoryTable() {
     const transactionsToBeDeleted0 = await getDocs(transactionsQuery); // The transactions which belong to the category are fetched
 
     transactionsToBeDeleted0.forEach((transactionDoc) => {
-      const transactionsToBeDeleted1 = doc(db, "transactions", transactionDoc.id);
+      const transactionsToBeDeleted1 = doc(
+        db,
+        "transactions",
+        transactionDoc.id
+      );
       batch.delete(transactionsToBeDeleted1);
     });
 
@@ -178,7 +195,7 @@ export default function CategoryTable() {
         variant: "left-accent",
       });
     } catch (error) {
-      console.error("Error deleting category:", error) // Displays an error message in the console
+      console.error("Error deleting category:", error); // Displays an error message in the console
       toast({
         title: "Uh oh!",
         description:
@@ -217,23 +234,23 @@ export default function CategoryTable() {
       </Thead>
       <Tbody>
         {categories.map((category) => (
-          <Tr key={category.id}>
+          <Tr key={category.categoryId}>
             <Td border="1px" borderColor="gray.500">
-              {editingCategory === category.id ? (
+              {editingCategory === category.categoryId ? (
                 <Input
                   value={editingCategoryName}
                   onChange={(e) => setEditingCategoryName(e.target.value)}
                 />
               ) : (
-                category.name
+                category.categoryName
               )}
             </Td>
             <Td border="1px" borderColor="gray.500">
-              {editingCategory === category.id ? (
+              {editingCategory === category.categoryId ? (
                 <IconButton
                   aria-label="Confirm Edit"
                   icon={<CheckIcon />}
-                  onClick={() => handleEditCategory(category.id)}
+                  onClick={() => handleEditCategory(category.categoryId)}
                 />
               ) : (
                 <HStack spacing={0}>
@@ -241,15 +258,20 @@ export default function CategoryTable() {
                     aria-label="Edit"
                     icon={<EditIcon />}
                     onClick={() => {
-                      setEditingCategory(category.id);
-                      setEditingCategoryName(category.name);
+                      setEditingCategory(category.categoryId);
+                      setEditingCategoryName(category.categoryName);
                     }}
                   />
                   <IconButton
                     ml="15px"
                     aria-label="Delete"
                     icon={<DeleteIcon />}
-                    onClick={() => openDeleteModal(category.id, category.name)}
+                    onClick={() =>
+                      openDeleteModal(
+                        category.categoryId,
+                        category.categoryName
+                      )
+                    }
                   />
                 </HStack>
               )}

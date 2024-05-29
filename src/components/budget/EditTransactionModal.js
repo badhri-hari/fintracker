@@ -40,8 +40,17 @@ export default function DeleteTransactionConfirmationModal({
   );
   const [updatedTransactionAmount, setTransactionAmount] =
     useState(transactionAmount);
-  const [updatedTransactionDate, setTransactionDate] =
-    useState(transactionDate);
+
+  const formatDate = (date) => {
+    const [month, day, year] = date.split("/");
+    const formattedMonth = month.padStart(2, "0");
+    const formattedDay = day.padStart(2, "0");
+    return `${formattedMonth}/${formattedDay}/${year}`;
+  };
+
+  const [updatedTransactionDate, setTransactionDate] = useState(
+    formatDate(transactionDate)
+  );
   const [updatedTransactionCategory, setUpdatedTransactionCategory] =
     useState(transactionCategory);
 
@@ -52,9 +61,10 @@ export default function DeleteTransactionConfirmationModal({
   useEffect(() => {
     const fetchCategories = async () => {
       const querySnapshot = await getDocs(collection(db, "categories"));
-      const fetchedCategories = querySnapshot.docs.map(
-        (doc) => doc.data().name
-      );
+      const fetchedCategories = querySnapshot.docs.map((doc) => ({
+        categoryId: doc.id,
+        categoryName: doc.data().categoryName,
+      }));
       setCategories(fetchedCategories);
     };
 
@@ -63,6 +73,32 @@ export default function DeleteTransactionConfirmationModal({
   }, [onOpen]);
 
   const updateTransaction = async (id) => {
+    const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+
+    if (!dateRegex.test(updatedTransactionDate)) {
+      toast({
+        title: "Oops!",
+        description: "Please enter the transaction date in MM/DD/YYYY format.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        variant: "left-accent",
+      });
+      return;
+    }
+
+    if (updatedTransactionName.length > 20) {
+      toast({
+        title: "Oops!",
+        description: "The transaction's name should not exceed 20 characters.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        variant: "left-accent",
+      });
+      return;
+    }
+
     if (
       updatedTransactionAmount !== undefined &&
       updatedTransactionDate !== undefined &&
@@ -70,13 +106,33 @@ export default function DeleteTransactionConfirmationModal({
       updatedTransactionCategory !== undefined
     ) {
       const transactionDoc = doc(db, "transactions", id);
-      await updateDoc(transactionDoc, {
-        amount: parseFloat(updatedTransactionAmount),
-        dateAdded: Timestamp.fromDate(new Date(updatedTransactionDate)),
-        name: updatedTransactionName,
-        category: updatedTransactionCategory,
-      });
-      closeModal();
+      try {
+        await updateDoc(transactionDoc, {
+          amount: parseFloat(updatedTransactionAmount),
+          dateAdded: Timestamp.fromDate(new Date(updatedTransactionDate)),
+          transactionName: updatedTransactionName,
+          categoryId: updatedTransactionCategory,
+        });
+        toast({
+          title: "Success!",
+          description: "Transaction updated successfully.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          variant: "left-accent",
+        });
+        closeModal();
+      } catch (error) {
+        console.error("Error updating transaction:", error);
+        toast({
+          title: "Uh oh!",
+          description: "An error occurred in updating the transaction, please try again later.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          variant: "left-accent",
+        });
+      }
     } else {
       toast({
         title: "Oops!",
@@ -90,8 +146,12 @@ export default function DeleteTransactionConfirmationModal({
   };
 
   const handleCategoryChange = (event) => {
-    const value = event.target.value;
-    setUpdatedTransactionCategory(value);
+    const selectedCategory = categories.find(
+      (category) => category.categoryId === event.target.value
+    );
+    setUpdatedTransactionCategory(
+      selectedCategory ? selectedCategory.categoryId : ""
+    );
   };
 
   const { colorMode } = useContext(ThemeContext);
@@ -142,9 +202,12 @@ export default function DeleteTransactionConfirmationModal({
                   onChange={handleCategoryChange}
                   value={updatedTransactionCategory}
                 >
-                  {categories.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
+                  {categories.map((category) => (
+                    <option
+                      key={category.categoryId}
+                      value={category.categoryId}
+                    >
+                      {category.categoryName}
                     </option>
                   ))}
                 </Select>
@@ -155,7 +218,7 @@ export default function DeleteTransactionConfirmationModal({
                 <Input
                   id="transaction_date"
                   type="text"
-                  placeholder="Enter date"
+                  placeholder="Enter date (MM/DD/YYYY)"
                   value={updatedTransactionDate}
                   onChange={(e) => setTransactionDate(e.target.value)}
                 />

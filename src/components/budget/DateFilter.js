@@ -21,6 +21,21 @@ const DateFilter = ({ startDate, setStartDate, endDate, setEndDate }) => {
     setEndDate(null);
   };
 
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+    if (date && endDate && date > endDate) {
+      setEndDate(null); // Reset end date if it's before the new start date
+    }
+  };
+
+  const handleEndDateChange = (date) => {
+    if (startDate && date < startDate) {
+      alert("The end date cannot be before the start date.");
+      return;
+    }
+    setEndDate(date);
+  };
+
   return (
     <>
       <Box textAlign="center">
@@ -40,7 +55,7 @@ const DateFilter = ({ startDate, setStartDate, endDate, setEndDate }) => {
           <DatePicker
             className={`${colorMode === "dark" ? "dark-datepicker" : ""}`}
             selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            onChange={handleStartDateChange}
             placeholderText="Start Date"
             dateFormat="MMMM d, yyyy"
           />
@@ -52,14 +67,12 @@ const DateFilter = ({ startDate, setStartDate, endDate, setEndDate }) => {
           <DatePicker
             className={`${colorMode === "dark" ? "dark-datepicker" : ""}`}
             selected={endDate}
-            onChange={(date) => setEndDate(date)}
+            onChange={handleEndDateChange}
             placeholderText="End Date"
             dateFormat="MMMM d, yyyy"
-          >
-            <div style={{ color: "red" }}>
-              The end date should not be before the start date!
-            </div>
-          </DatePicker>
+            minDate={startDate} // Prevent end date before start date
+            disabled={!startDate} // Disable end date picker until start date is selected
+          />
         </FormControl>
         <Button
           onClick={clearFilter}
