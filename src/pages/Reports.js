@@ -81,20 +81,29 @@ export default function Reports() {
         alignItems="stretch"
         w="98%"
         spacing="15px"
+        // The above specified style properties for the HStack component ensure UI organization
       >
         <MonthlyIncomeGraph
-          shouldAnimate={shouldAnimate === "income"}
-          year={selectedYear}
+          shouldAnimate={shouldAnimate === "income"} // Variable used for animating the
+          // - MonthlyIncomeGraph component if the user wanted to see his monthly incomes
+          year={selectedYear} // Passes the 'selectedYear' value from this page
+          // - as the 'year' value to the MonthlyIncomeGraph component
+          flex={1} // Ensures that each graph component occupies an equal amount of space within the HStack component
         />
         <MonthlyExpenseGraph
-          shouldAnimate={shouldAnimate === "expense"}
-          year={selectedYear}
-          flex={1}
+          shouldAnimate={shouldAnimate === "expense"} // Variable used for animating the
+          // - MonthlyExpenseGraph component if the user wanted to see his monthly expenses
+          year={selectedYear} // Passes the 'selectedYear' value from this page
+          // - as the 'year' value to the MonthlyExpenseGraph component
+          flex={1} // Ensures that each graph component occupies an equal amount of space within the HStack component
         />
         <MonthlyBalanceGraph
-          shouldAnimate={shouldAnimate === "balance"}
+          shouldAnimate={shouldAnimate === "balance"} // Variable used for animating the
+          // - MonthlyBalanceGraph component if the user wanted to see his monthly balances
           year={selectedYear}
-          flex={1}
+          // Passes the 'selectedYear' value from this page
+          // - as the 'year' value to the MonthlyBalanceGraph component
+          flex={1} // Ensures that each graph component occupies an equal amount of space within the HStack component
         />
       </HStack>
       <Divider
