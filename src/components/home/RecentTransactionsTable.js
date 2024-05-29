@@ -25,7 +25,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeContext } from "../settings/ThemeContext";
 
-export default function HomeTable() {
+export default function RecentTransactionsTable() {
   const { colorMode } = useContext(ThemeContext);
 
   const [transactions, setTransactions] = useState([]);
