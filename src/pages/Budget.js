@@ -84,19 +84,18 @@ export default function Budget() {
       )
     : null;
 
-  const buildCombinedQuery = (
-    currentUserUID,
-    transactionFilterOption,
-    startTimestamp,
-    endTimestamp,
-    minAmount,
-    maxAmount,
-    selectedCategory
+  const buildCombinedQuery = ( // Constant used to form and update the query function
+    currentUserUID, // Client's Firebase-provided user ID for identifying work and personal accounts
+    transactionFilterOption, // Filters by transaction type (income or expense)
+    startTimestamp, // Allows client to filter transactions that were added after a date
+    endTimestamp, // Allows client to filter transactions that were added before a date
+    minAmount, // Minimum absolute value of the amount of a transaction
+    maxAmount, // Maximum absolute value of the amount of a transaction
+    selectedCategory // Allows filtering transactions by their category
   ) => {
-    let transactionsQuery = query(
-      collection(db, "transactions"),
-      where("userId", "==", currentUserUID),
-      limit(20)
+    let transactionsQuery = query( // The actual query function
+      collection(db, "transactions"), // Queries the 'transactions' collection in the database
+      where("userId", "==", currentUserUID) // Only displays transactions which belong to the current account
     );
 
     if (transactionFilterOption === "income") {
@@ -155,8 +154,7 @@ export default function Budget() {
 
     transactionsQuery = query(
       transactionsQuery,
-      orderBy("amount"),
-      orderBy("dateAdded", "desc")
+      orderBy("dateAdded", "desc") // Most recent transactions are placed on top
     );
 
     return transactionsQuery;
