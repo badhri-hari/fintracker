@@ -52,8 +52,7 @@ export default function ExpenseForm() {
     return () => unsubscribe();
   }, [userId]);
 
-  const onSubmitExpense = async () => {
-    // Defining an async function for adding a new expense
+  const onSubmitExpense = async () => { // Defining an async function for adding a new expense
     if (!expense || !transactionName || !transactionCategory) {
       toast({
         title: "Oops!",
