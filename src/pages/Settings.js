@@ -47,7 +47,8 @@ export default function Settings() {
           width: "100%",
           backgroundColor: "transparent",
         }}
-      ></footer>
+      >
+      </footer>
     </Flex>
   );
 }
