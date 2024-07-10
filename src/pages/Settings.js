@@ -6,7 +6,6 @@ import { Heading, Box, VStack, Divider, Flex } from "@chakra-ui/react";
 
 import CategoryTable from "../components/settings/CategoryTable";
 import ColorToggle from "../components/settings/ColorToggle";
-import ContactUs from "../components/settings/ContactUs";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -48,14 +47,7 @@ export default function Settings() {
           width: "100%",
           backgroundColor: "transparent",
         }}
-      >
-        <div style={{ marginBottom: "5vh" }}>
-          <ContactUs />
-        </div>
-        <div style={{ display: "none" }}>
-          Badhri Hari © {new Date().getFullYear()}. All rights reserved.
-        </div>
-      </footer>
+      ></footer>
     </Flex>
   );
 }
