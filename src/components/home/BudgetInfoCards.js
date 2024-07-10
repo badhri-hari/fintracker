@@ -61,7 +61,6 @@ export default function BudgetInfoCards() {
       if (!user) {
         navigate("/");
       } else {
-        // Check if the user is new
         const creationTime = new Date(user.metadata.creationTime).getTime();
         const lastSignInTime = new Date(user.metadata.lastSignInTime).getTime();
 
@@ -69,7 +68,6 @@ export default function BudgetInfoCards() {
           creationTime === lastSignInTime ||
           lastSignInTime - creationTime < 5000
         ) {
-          // Show tooltips for 5 seconds
           setShowIncomeTooltip(true);
           setShowExpenseTooltip(true);
           const timer = setTimeout(() => {

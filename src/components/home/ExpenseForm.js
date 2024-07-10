@@ -53,6 +53,7 @@ export default function ExpenseForm() {
   }, [userId]);
 
   const onSubmitExpense = async () => {
+    // Defining an async function for adding a new expense
     if (!expense || !transactionName || !transactionCategory) {
       toast({
         title: "Oops!",
@@ -91,31 +92,36 @@ export default function ExpenseForm() {
     }
 
     try {
+      // 'try' block which tries adding a new expense to the database
       await addDoc(transactionsCollectionReference, {
+        // 'await' is used inside an async function which pauses the function's execution until addDoc completes
         transactionName: transactionName,
-        amount: -expense,
+        amount: -expense, // Expenses will have negative amounts
         categoryId: transactionCategory,
         dateAdded: new Date(),
         userId: userId,
       });
       toast({
-        title: "Success!",
+        // Message for the client regarding the status of the insertion of the new expense into the database
+        title: "Success!", // Indicates to the client that the insertion of the expense to the database was successful
         description: "Expense added successfully.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        variant: "left-accent",
+        status: "success", // For styling purposes
+        duration: 5000, // Message displays for 5000 milliseconds (5 seconds)
+        isClosable: true, // Message can be closed by the client before the 5 second limit is over
+        variant: "left-accent", // For styling purposes
       });
     } catch (error) {
-      console.error("Error adding document: ", error);
+      // Stops the execution of the 'try' block in the event of an error and records the error message
+      console.error("Error adding document: ", error); // Logs the error into the console for troubleshooting
       toast({
-        title: "Uh oh!",
+        // Message for the client regarding the status of the insertion of the new expense into the database
+        title: "Uh oh!", // Indicates to the client that the insertion of the expense to the database was unsuccessful
         description:
           "An error occurred in adding the expense, please try again later.",
-        status: "error",
+        status: "error", // For styling purposes
         duration: 5000,
-        isClosable: true,
-        variant: "left-accent",
+        isClosable: true, // Message can be closed by the client before the 5 second limit is over
+        variant: "left-accent", // For styling purposes
       });
     }
   };
