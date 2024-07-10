@@ -12,7 +12,6 @@ import Budget from "./pages/Budget";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import SignIn from "./pages/SignIn";
-import Finhub from "./pages/FinHub";
 import "./styles/stylesheet.css";
 import "./styles/index.css";
 
@@ -44,7 +43,6 @@ function AnimatedRoutes() {
             <Route path="budget" element={<Budget />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="finhub" element={<Finhub />} />
             <Route path="*" element={<Home />} />
           </Routes>
         )}
