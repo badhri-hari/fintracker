@@ -80,8 +80,8 @@ export default function DeleteTransactionConfirmationModal({
     ) {
       const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/; // Used to check the format of the updated date the client has inputted
 
-      if (!dateRegex.test(updatedTransactionDate)) { // If the new date doesn't follow the format specified by the dateRegex (should be MM/DD/YYYY), the client is informed (lines 87-95) and the execution of updateTransactio
-         // is terminated (in line 96)
+      if (!dateRegex.test(updatedTransactionDate)) { // If the new date doesn't follow the format specified by the dateRegex (should be MM/DD/YYYY), the client is informed (lines 87-95) and the execution of
+         // updateTransaction is terminated (in line 96)
         toast({
           title: "Oops!",
           description:
