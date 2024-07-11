@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
 import {
   doc,
@@ -23,8 +23,6 @@ import {
   useToast,
   Select,
 } from "@chakra-ui/react";
-
-import { ThemeContext } from "../settings/ThemeContext";
 
 export default function DeleteTransactionConfirmationModal({
   transactionId,
@@ -73,9 +71,11 @@ export default function DeleteTransactionConfirmationModal({
   }, [onOpen]);
 
   const updateTransaction = async (id) => {
-    const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+    // Async function used to edit a transaction's fields in the database
+    const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/; // Used to check the format of the updated date the client has inputted
 
     if (!dateRegex.test(updatedTransactionDate)) {
+      // If the new date doesn't follow the format of the dateRegex, then the client is informed (lines 77-84) and updateTransaction is stopped (in line 85)
       toast({
         title: "Oops!",
         description: "Please enter the transaction date in MM/DD/YYYY format.",
@@ -88,6 +88,7 @@ export default function DeleteTransactionConfirmationModal({
     }
 
     if (updatedTransactionName.length > 20) {
+      // If the new transaction name is longer than 20 characters, then the client is informed (lines 89-96) and updateTransaction is stopped (in line 97)
       toast({
         title: "Oops!",
         description: "The transaction's name should not exceed 20 characters.",
@@ -100,11 +101,13 @@ export default function DeleteTransactionConfirmationModal({
     }
 
     if (
+      // If there are fields without a value, then the client is informed (lines 77-84) and updateTransaction is stopped (in line 148)
       updatedTransactionAmount !== undefined &&
       updatedTransactionDate !== undefined &&
       updatedTransactionName !== undefined &&
       updatedTransactionCategory !== undefined
     ) {
+      // Lines 110-138 execute the updateDoc function to update the transaction's fields in the database if all the fields have validated values
       const transactionDoc = doc(db, "transactions", id);
       try {
         await updateDoc(transactionDoc, {
@@ -126,7 +129,8 @@ export default function DeleteTransactionConfirmationModal({
         console.error("Error updating transaction:", error);
         toast({
           title: "Uh oh!",
-          description: "An error occurred in updating the transaction, please try again later.",
+          description:
+            "An error occurred in updating the transaction, please try again later.",
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -142,6 +146,7 @@ export default function DeleteTransactionConfirmationModal({
         isClosable: true,
         variant: "left-accent",
       });
+      return;
     }
   };
 

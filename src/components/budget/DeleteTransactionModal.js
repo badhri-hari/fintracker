@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import { db } from "../../config/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import {
@@ -13,15 +13,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { ThemeContext } from "../settings/ThemeContext";
-
 export default function DeleteTransactionConfirmationModal({
   transactionId,
   transactionRecordName,
   transactionDate,
   onClose,
 }) {
-  const { isOpen, onOpen, onClose: closeModal } = useDisclosure(); // Use useDisclosure to manage modal state
+  const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
   const toast = useToast();
 
   useEffect(() => {
@@ -55,8 +53,6 @@ export default function DeleteTransactionConfirmationModal({
       });
     }
   };
-
-  const { colorMode } = useContext(ThemeContext);
 
   return (
     <>

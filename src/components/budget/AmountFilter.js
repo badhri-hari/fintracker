@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   VStack,
   FormControl,
@@ -10,11 +10,8 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
-import { ThemeContext } from "../settings/ThemeContext";
 
 const AmountFilter = ({ onFilterChange }) => {
-  const { colorMode } = useContext(ThemeContext);
-
   const [minAmount, setMinAmount] = useState("");
   const [maxAmount, setMaxAmount] = useState("");
 

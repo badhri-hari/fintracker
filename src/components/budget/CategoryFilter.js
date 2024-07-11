@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Select,
   Box,
@@ -11,11 +11,7 @@ import {
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
-import { ThemeContext } from "../settings/ThemeContext";
-
 export default function CategoryFilter({ selectedCategory, onSelectCategory }) {
-  const { colorMode } = useContext(ThemeContext);
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
