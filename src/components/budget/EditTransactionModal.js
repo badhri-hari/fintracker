@@ -70,46 +70,46 @@ export default function DeleteTransactionConfirmationModal({
     onOpen();
   }, [onOpen]);
 
-  const updateTransaction = async (id) => {
-    // Async function used to edit a transaction's fields in the database
-    const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/; // Used to check the format of the updated date the client has inputted
-
-    if (!dateRegex.test(updatedTransactionDate)) {
-      // If the new date doesn't follow the format of the dateRegex, then the client is informed (lines 77-84) and updateTransaction is stopped (in line 85)
-      toast({
-        title: "Oops!",
-        description: "Please enter the transaction date in MM/DD/YYYY format.",
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-        variant: "left-accent",
-      });
-      return;
-    }
-
-    if (updatedTransactionName.length > 20) {
-      // If the new transaction name is longer than 20 characters, then the client is informed (lines 89-96) and updateTransaction is stopped (in line 97)
-      toast({
-        title: "Oops!",
-        description: "The transaction's name should not exceed 20 characters.",
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-        variant: "left-accent",
-      });
-      return;
-    }
-
-    if (
-      // If there are fields without a value, then the client is informed (lines 77-84) and updateTransaction is stopped (in line 148)
+  const updateTransaction = async (id) => { // Async function used to edit a transaction's fields in the database
+    if ( // If any transaction fields are undefined, the client is informed (lines 143-150) and the execution of updateTransaction is terminated (in line 151) 
+      // If all fields are defined, then input validation starts from line 83
       updatedTransactionAmount !== undefined &&
       updatedTransactionDate !== undefined &&
       updatedTransactionName !== undefined &&
       updatedTransactionCategory !== undefined
     ) {
-      // Lines 110-138 execute the updateDoc function to update the transaction's fields in the database if all the fields have validated values
-      const transactionDoc = doc(db, "transactions", id);
-      try {
+      const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/; // Used to check the format of the updated date the client has inputted
+
+      if (!dateRegex.test(updatedTransactionDate)) { // If the new date doesn't follow the format specified by the dateRegex (should be MM/DD/YYYY), the client is informed (lines 87-95) and the execution of updateTransactio
+         // is terminated (in line 96)
+        toast({
+          title: "Oops!",
+          description:
+            "Please enter the transaction date in MM/DD/YYYY format.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+          variant: "left-accent",
+        });
+        return;
+      }
+
+      if (updatedTransactionName.length > 20) { // If the new transaction name is longer than 20 characters, then the client is informed (lines 102-109) and the execution of updateTransaction is terminated (in line 110)
+        toast({
+          title: "Oops!",
+          description:
+            "The transaction's name should not exceed 20 characters.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+          variant: "left-accent",
+        });
+        return;
+      }
+
+      const transactionDoc = doc(db, "transactions", id); // The specific transaction doc that the client is editing - it is used in the updateDoc function in the try block below
+
+      try { // updateDoc Firestore function is executed within this try block after the client's inputs are validated and the catch block executes in the event of an error
         await updateDoc(transactionDoc, {
           amount: parseFloat(updatedTransactionAmount),
           dateAdded: Timestamp.fromDate(new Date(updatedTransactionDate)),
@@ -137,8 +137,8 @@ export default function DeleteTransactionConfirmationModal({
           variant: "left-accent",
         });
       }
-    } else {
-      toast({
+    } else { // Executes if any of the fields are empty (undefined)
+      toast({ // The client is informed to fill out all the fields (lines 146-153) and the execution of updateTransaction is terminated (in line 154)
         title: "Oops!",
         description: "Please fill out all the fields.",
         status: "warning",
