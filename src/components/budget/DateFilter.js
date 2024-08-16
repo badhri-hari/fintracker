@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -10,8 +10,11 @@ import {
   Heading,
   Divider,
 } from "@chakra-ui/react";
+import { ThemeContext } from "../settings/ThemeContext";
 
 const DateFilter = ({ startDate, setStartDate, endDate, setEndDate }) => {
+  const { colorMode } = useContext(ThemeContext);
+
   const clearFilter = () => {
     setStartDate(null);
     setEndDate(null);

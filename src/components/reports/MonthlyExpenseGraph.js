@@ -123,7 +123,6 @@ export default function MonthlyIncomeGraph({ shouldAnimate, year }) {
             left="50%"
             transform="translateX(-50%)"
             zIndex="1"
-            cursor="pointer"
             px="12px"
             pb="1px"
             whiteSpace="nowrap"
@@ -136,7 +135,9 @@ export default function MonthlyIncomeGraph({ shouldAnimate, year }) {
             transform="translateX(-50%) translateY(-50%)"
             top="0"
             zIndex="2"
+            cursor="pointer"
             onChange={handleMonthChange}
+            value={selectedMonth}
             width="auto"
             minWidth="200px"
             placeholder=" "
@@ -149,7 +150,7 @@ export default function MonthlyIncomeGraph({ shouldAnimate, year }) {
           >
             {months.map((month, index) => (
               <option key={index} value={index}>
-                {month}
+                {selectedMonth === index ? "" : month}{" "}
               </option>
             ))}
           </Select>

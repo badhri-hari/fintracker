@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Select,
   Box,
@@ -8,15 +8,20 @@ import {
   Divider,
   VStack,
 } from "@chakra-ui/react";
-import { collection, query, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { collection, query, getDocs, where } from "firebase/firestore";
+import { db, auth } from "../../config/firebase";
+import { ThemeContext } from "../settings/ThemeContext";
 
 export default function CategoryFilter({ selectedCategory, onSelectCategory }) {
+  const { colorMode } = useContext(ThemeContext);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     async function fetchCategories() {
-      const categoriesQuery = query(collection(db, "categories"));
+      const categoriesQuery = query(
+        collection(db, "categories"),
+        where("userId", "==", auth?.currentUser?.uid)
+      );
 
       try {
         const querySnapshot = await getDocs(categoriesQuery);

@@ -10,6 +10,7 @@ import MonthlyExpenseGraph from "../components/reports/MonthlyExpenseGraph";
 import MonthlyIncomePiechart from "../components/reports/MonthlyIncomePiechart";
 import MonthlyExpensePiechart from "../components/reports/MonthlyExpensePiechart";
 import MonthlyBalanceGraph from "../components/reports/MonthlyBalanceGraph";
+import Header from "../components/header/Header";
 
 export default function Reports() {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ export default function Reports() {
 
   return (
     <>
+      <Header />
       <Heading as="h2" size="xl" ml="20px" mt="18px" mb="18px">
         Your Reports
       </Heading>

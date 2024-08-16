@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { db } from "../../config/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import {
@@ -12,6 +12,7 @@ import {
   AlertDialogOverlay,
   useToast,
 } from "@chakra-ui/react";
+import { ThemeContext } from "../settings/ThemeContext";
 
 export default function DeleteTransactionConfirmationModal({
   transactionId,
@@ -19,6 +20,7 @@ export default function DeleteTransactionConfirmationModal({
   transactionDate,
   onClose,
 }) {
+  const { colorMode } = useContext(ThemeContext);
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
   const toast = useToast();
 

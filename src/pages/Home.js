@@ -4,6 +4,7 @@ import { auth } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { Divider, Heading, Box } from "@chakra-ui/react";
 
+import Header from "../components/header/Header";
 import BudgetInfoCards from "../components/home/BudgetInfoCards";
 import RecentTransactionsTable from "../components/home/RecentTransactionsTable";
 
@@ -24,6 +25,7 @@ export default function Home() {
 
   return (
     <>
+      <Header />
       <Heading as="h2" size="xl" ml="20px" mt="18px" mb="18px">
         {displayName}
       </Heading>

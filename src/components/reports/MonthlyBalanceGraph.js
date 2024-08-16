@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db, auth } from "../../config/firebase";
-import { Box, Flex, Heading, Select } from "@chakra-ui/react";
+import { Box, Flex, Heading, Select, Divider } from "@chakra-ui/react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -119,6 +119,7 @@ export default function MonthlyIncomeGraph({ shouldAnimate, year }) {
         height="20rem"
       >
         <Flex position="relative" alignItems="center" margin="3">
+          <Divider borderColor="black" />
           <Heading
             color={`${colorMode === "dark" ? "white" : ""}`}
             bg={`${colorMode === "dark" ? "rgb(150, 150, 150)" : "gray.100"}`}
@@ -127,7 +128,6 @@ export default function MonthlyIncomeGraph({ shouldAnimate, year }) {
             left="50%"
             transform="translateX(-50%)"
             zIndex="1"
-            cursor="pointer"
             px="12px"
             pb="1px"
             whiteSpace="nowrap"
@@ -140,7 +140,9 @@ export default function MonthlyIncomeGraph({ shouldAnimate, year }) {
             transform="translateX(-50%) translateY(-50%)"
             top="0"
             zIndex="2"
+            cursor="pointer"
             onChange={handleMonthChange}
+            value={selectedMonth}
             width="auto"
             minWidth="200px"
             placeholder=" "
@@ -153,7 +155,7 @@ export default function MonthlyIncomeGraph({ shouldAnimate, year }) {
           >
             {months.map((month, index) => (
               <option key={index} value={index}>
-                {month}
+                {selectedMonth === index ? "" : month}{" "}
               </option>
             ))}
           </Select>

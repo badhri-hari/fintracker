@@ -13,17 +13,10 @@
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.1",
-    "axios": "^1.6.2",
     "chart.js": "^4.4.1",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
     "firebase": "^10.9.0",
     "firebase-tools": "^13.3.0",
     "fortawesome": "^0.0.1-security",
-    "framer-motion": "^10.16.16",
-    "mdb-react-ui-kit": "^7.0.0",
-    "nodemon": "^3.0.2",
-    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^4.24.0",
@@ -31,20 +24,14 @@
     "react-icons": "^4.12.0",
     "react-range": "^1.8.14",
     "react-router-dom": "^6.21.0",
-    "react-scripts": "^5.0.1",
-    "react-transition-group": "^4.4.5",
-    "styled-components": "^6.1.1",
-    "web-vitals": "^3.5.0"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
     "react-test": "react-scripts test",
     "react-eject": "react-scripts eject",
-    "electron-build": "electron-builder",
-    "release": "npm run react-build && npm run electron-build",
-    "electron-start": "electron .",
-    "start": "concurrently \"npm run react-start\" \"wait-on http://localhost:3000 && npm run electron-start\""
+    "start": "npm run react-start"
   },
   "eslintConfig": {
     "extends": [
@@ -64,25 +51,13 @@
       "last 1 safari version"
     ]
   },
-  "build": {
-    "appId": "fintracker",
-    "productName": "FinTracker",
-    "win": {
-      "target": "nsis"
-    }
-  },
-  "description": "This is a simple budgeting app bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "description": "A simple budgeting app created for the IBDP CS IA assessment project.",
   "main": "main.js",
   "keywords": [],
-  "author": "",
+  "author": "Badhri N Hari",
   "license": "ISC",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@wixc3/react-board": "^2.3.0",
-    "concurrently": "^8.2.2",
-    "electron": "^28.1.4",
-    "electron-builder": "^24.9.1",
-    "electron-is-dev": "^3.0.1",
-    "wait-on": "^7.2.0"
+    "@wixc3/react-board": "^2.3.0"
   }
 }

@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  getDocs,
+} from "firebase/firestore";
 import { db, auth } from "../../config/firebase";
-import { Heading, Box, Divider, Flex, Select, Tooltip } from "@chakra-ui/react";
+import { Heading, Box, Divider, Flex, Select } from "@chakra-ui/react";
 import { Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -52,69 +58,60 @@ export default function MonthlyExpensePiechart({ year }) {
     ],
   });
 
-  const isCurrentMonth = (date) => {
-    const now = new Date();
-    return (
-      date.getFullYear() === now.getFullYear() &&
-      date.getMonth() === now.getMonth()
-    );
-  };
-
   useEffect(() => {
-    const transactionsRef = query(
-      collection(db, "transactions"),
-      where("userId", "==", auth?.currentUser?.uid)
-    );
     const startOfMonth = new Date(year, selectedMonth, 1);
     const endOfMonth = new Date(year, selectedMonth + 1, 0);
 
-    const q = query(
-      transactionsRef,
-      where("userId", "==", auth?.currentUser?.uid),
-      where(
-        "dateAdded",
-        ">=",
-        new Date(new Date().getFullYear(), selectedMonth, 1)
-      ),
-      where(
-        "dateAdded",
-        "<",
-        new Date(new Date().getFullYear(), selectedMonth + 1, 1)
-      ),
-      where("dateAdded", ">=", startOfMonth),
-      where("dateAdded", "<=", endOfMonth)
-    );
-
-    const unsubscribeFirestore = onSnapshot(q, (snapshot) => {
-      const amountsByCategory = {};
-
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.amount < 0 && isCurrentMonth(data.dateAdded.toDate())) {
-          amountsByCategory[data.categoryName] =
-            (amountsByCategory[data.categoryName] || 0) + data.amount;
-        }
+    const fetchCategoriesAndTransactions = async () => {
+      const categoriesSnapshot = await getDocs(collection(db, "categories"));
+      const categories = {};
+      categoriesSnapshot.forEach((doc) => {
+        categories[doc.id] = doc.data().name;
       });
 
-      const categories = Object.keys(amountsByCategory);
-      const amounts = categories.map((category) => amountsByCategory[category]);
+      const transactionsRef = query(
+        collection(db, "transactions"),
+        where("userId", "==", auth?.currentUser?.uid),
+        where("dateAdded", ">=", startOfMonth),
+        where("dateAdded", "<=", endOfMonth)
+      );
 
-      const newChartData = {
-        labels: categories,
-        datasets: [
-          {
-            data: amounts,
-            backgroundColor: ["#af4c50", "#c38b4a", "#dccd39", "#bb666a"],
-          },
-        ],
+      const unsubscribeFirestore = onSnapshot(transactionsRef, (snapshot) => {
+        const amountsByCategory = {};
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.amount < 0) {
+            const categoryName = categories[data.categoryId] || "Uncategorized";
+            amountsByCategory[categoryName] =
+              (amountsByCategory[categoryName] || 0) + Math.abs(data.amount);
+          }
+        });
+
+        const chartCategories = Object.keys(amountsByCategory);
+        const amounts = chartCategories.map(
+          (category) => amountsByCategory[category]
+        );
+
+        const newChartData = {
+          labels: chartCategories,
+          datasets: [
+            {
+              data: amounts,
+              backgroundColor: ["#af4c50", "#c38b4a", "#dccd39", "#bb666a"],
+            },
+          ],
+        };
+
+        setChartData(newChartData);
+      });
+
+      return () => {
+        unsubscribeFirestore();
       };
-
-      setChartData(newChartData);
-    });
-
-    return () => {
-      unsubscribeFirestore();
     };
+
+    fetchCategoriesAndTransactions();
   }, [selectedMonth, year]);
 
   const currentMonthName = months[selectedMonth];
@@ -133,61 +130,46 @@ export default function MonthlyExpensePiechart({ year }) {
         >
           <Flex position="relative" alignItems="center" margin="3">
             <Divider borderColor="black" />
-            <Tooltip
-              hasArrow
-              bg="gray.600"
-              color="white"
-              label="Double click on me to filter by months!"
-              openDelay={400}
-              closeDelay={50}
-              placement="top"
-              aria-label="Tooltip to let you know that if you click on this menu, you can see the options to edit or delete this specific transaction."
+            <Heading
+              color={`${colorMode === "dark" ? "white" : ""}`}
+              bg={`${colorMode === "dark" ? "rgb(150, 150, 150)" : "gray.100"}`}
+              size="md"
+              position="absolute"
+              left="50%"
+              transform="translateX(-50%)"
+              zIndex="1"
+              onClick={toggleDropdown}
+              px="12px"
+              pb="1px"
+              whiteSpace="nowrap"
             >
-              <Heading
-                color={`${colorMode === "dark" ? "white" : ""}`}
-                bg={`${
-                  colorMode === "dark" ? "rgb(150, 150, 150)" : "gray.100"
-                }`}
-                size="md"
-                position="absolute"
-                left="50%"
-                transform="translateX(-50%)"
-                zIndex="1"
-                onClick={toggleDropdown}
-                cursor="pointer"
-                px="12px"
-                pb="1px"
-                whiteSpace="nowrap"
-              >
-                Expense Categories | {currentMonthName}
-              </Heading>
-            </Tooltip>
-            {showDropdown && (
-              <Select
-                position="absolute"
-                left="50%"
-                transform="translateX(-50%) translateY(-50%)"
-                top="0"
-                zIndex="2"
-                onChange={handleMonthChange}
-                onBlur={() => setShowDropdown(false)}
-                width="auto"
-                minWidth="200px"
-                placeholder=" "
-                icon="{styles={marginRight: auto}}"
-                sx={{
-                  border: "none",
-                  boxShadow: "none",
-                  "&:focus": { outline: "none", boxShadow: "none" },
-                }}
-              >
-                {months.map((month, index) => (
-                  <option key={index} value={index}>
-                    {month}
-                  </option>
-                ))}
-              </Select>
-            )}
+              Expense Categories | {currentMonthName}
+            </Heading>
+            <Select
+              position="absolute"
+              left="50%"
+              transform="translateX(-50%) translateY(-50%)"
+              top="0"
+              zIndex="2"
+              cursor="pointer"
+              onChange={handleMonthChange}
+              value={selectedMonth}
+              width="auto"
+              minWidth="200px"
+              placeholder=" "
+              icon="{styles={marginRight: auto}}"
+              sx={{
+                border: "none",
+                boxShadow: "none",
+                "&:focus": { outline: "none", boxShadow: "none" },
+              }}
+            >
+              {months.map((month, index) => (
+                <option key={index} value={index}>
+                  {selectedMonth === index ? "" : month}{" "}
+                </option>
+              ))}
+            </Select>
           </Flex>
           <Box mt="9%" height="85%" borderWidth={"1px"} borderColor={"black"}>
             <Pie

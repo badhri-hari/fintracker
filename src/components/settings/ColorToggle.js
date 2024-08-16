@@ -18,17 +18,17 @@ export default function ColorToggle() {
     setColorMode(colorMode === "light" ? "dark" : "light");
   };
 
-  return (
-    <Switch
-      isChecked={colorMode === "dark"}
-      onChange={toggleTheme}
-      padding="15px"
-      borderWidth="2px"
-      borderRadius="10px"
-      borderColor="gray.500"
-      aria-label="Toggle Dark Mode"
-    >
-      Switch to {colorMode === "light" ? "Dark" : "Light"} Mode
-    </Switch>
-  );
+  // return (
+  //   <Switch
+  //     isChecked={colorMode === "dark"}
+  //     onChange={toggleTheme}
+  //     padding="15px"
+  //     borderWidth="2px"
+  //     borderRadius="10px"
+  //     borderColor="gray.500"
+  //     aria-label="Toggle Dark Mode"
+  //   >
+  //     Switch to {colorMode === "light" ? "Dark" : "Light"} Mode
+  //   </Switch>
+  // );
 }

@@ -26,7 +26,6 @@ export default function IncomeForm() {
   const [income, setIncome] = useState(0);
   const [transactionName, setTransactionName] = useState("");
   const [transactionCategory, setTransactionCategory] = useState("");
-  const [transactionRepeatPeriod, setTransactionRepeatPeriod] = useState("");
   const [userCategories, setUserCategories] = useState([]);
   const navigate = useNavigate();
 
@@ -138,10 +137,6 @@ export default function IncomeForm() {
     }
   };
 
-  const handleRecurringTransaction = (event) => {
-    setTransactionRepeatPeriod(event.target.value);
-  };
-
   return (
     <div
       className={`transactionform-fade-enter ${
@@ -168,7 +163,7 @@ export default function IncomeForm() {
             placeholder="Select Category"
             onChange={handleCategoryChange}
             value={transactionCategory}
-            width="50%"
+            width="100%"
           >
             {userCategories.map((category) => (
               <option key={category.categoryId} value={category.categoryId}>
@@ -176,18 +171,6 @@ export default function IncomeForm() {
               </option>
             ))}
             <option value="add-new-category">+ Add a New Category</option>
-          </Select>
-          <Select
-            variant="outline"
-            placeholder="One time"
-            onChange={handleRecurringTransaction}
-            value={transactionRepeatPeriod}
-            width="50%"
-          >
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
           </Select>
         </HStack>
 

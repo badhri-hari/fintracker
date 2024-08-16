@@ -42,7 +42,7 @@ export default function Header() {
           hasArrow
           bg="gray.600"
           color="white"
-          label="Sign out"
+          label="Switch Accounts"
           openDelay={500}
           closeDelay={100}
           placement="left"

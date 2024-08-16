@@ -7,7 +7,6 @@ import {
   where,
   Timestamp,
   orderBy,
-  limit,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +27,7 @@ import {
 
 import { ThemeContext } from "../components/settings/ThemeContext";
 
+import Header from "../components/header/Header";
 import TransactionFilter from "../components/budget/TransactionFilter";
 import DateFilter from "../components/budget/DateFilter";
 import AmountFilter from "../components/budget/AmountFilter";
@@ -84,7 +84,8 @@ export default function Budget() {
       )
     : null;
 
-  const buildCombinedQuery = ( // Constant used to form and update the query function
+  const buildCombinedQuery = (
+    // Constant used to form and update the query function
     currentUserUID, // Client's Firebase-provided user ID for identifying work and personal accounts
     transactionFilterOption, // Filters by transaction type (income or expense)
     startTimestamp, // Allows client to filter transactions that were added after a date
@@ -93,7 +94,8 @@ export default function Budget() {
     maxAmount, // Maximum absolute value of the amount of a transaction
     selectedCategory // Allows filtering transactions by their category
   ) => {
-    let transactionsQuery = query( // The actual query function
+    let transactionsQuery = query(
+      // The actual query function
       collection(db, "transactions"), // Queries the 'transactions' collection in the database
       where("userId", "==", currentUserUID) // Only displays transactions which belong to the current account
     );
@@ -235,6 +237,7 @@ export default function Budget() {
 
   return (
     <>
+      <Header />
       <Heading ml="20px" mt="18px" mb="18px">
         Your Budget
       </Heading>

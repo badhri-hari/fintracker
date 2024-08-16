@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { db } from "../../config/firebase";
+import React, { useEffect, useState, useContext } from "react";
+import { db, auth } from "../../config/firebase";
 import {
   doc,
   Timestamp,
   updateDoc,
   getDocs,
   collection,
+  where,
+  query,
 } from "firebase/firestore";
 import {
   Button,
@@ -23,6 +25,7 @@ import {
   useToast,
   Select,
 } from "@chakra-ui/react";
+import { ThemeContext } from "../settings/ThemeContext";
 
 export default function DeleteTransactionConfirmationModal({
   transactionId,
@@ -30,7 +33,6 @@ export default function DeleteTransactionConfirmationModal({
   transactionAmount,
   transactionDate,
   transactionCategory,
-  onClose,
 }) {
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
   const [updatedTransactionName, setTransactionName] = useState(
@@ -58,7 +60,11 @@ export default function DeleteTransactionConfirmationModal({
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const querySnapshot = await getDocs(collection(db, "categories"));
+      const q = query(
+        collection(db, "categories"),
+        where("userId", "==", auth?.currentUser?.uid)
+      );
+      const querySnapshot = await getDocs(q);
       const fetchedCategories = querySnapshot.docs.map((doc) => ({
         categoryId: doc.id,
         categoryName: doc.data().categoryName,
@@ -76,7 +82,7 @@ export default function DeleteTransactionConfirmationModal({
       updatedTransactionAmount !== undefined &&
       updatedTransactionDate !== undefined &&
       updatedTransactionName !== undefined &&
-      updatedTransactionCategory !== undefined
+      updatedTransactionCategory !== undefined && updatedTransactionCategory !== ""
     ) {
       const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/; // Used to check the format of the updated date the client has inputted
 
@@ -204,6 +210,7 @@ export default function DeleteTransactionConfirmationModal({
                 <Select
                   id="transaction_category"
                   placeholder="Select Category"
+                  defaultValue={transactionCategory}
                   onChange={handleCategoryChange}
                   value={updatedTransactionCategory}
                 >
