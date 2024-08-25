@@ -1,16 +1,17 @@
-html.login-page {
+.sign-in {
   background-color: #528265;
 }
 
 .login-screen-body {
   background-color: #528265;
+  height: 100vh;
+  padding-top: 4%;
 }
 
 .login-screen-logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 4%;
 }
 
 .login-screen-logo {
@@ -49,18 +50,12 @@ a {
 }
 
 .alert-container {
-  position: fixed; /* Fixed position to stay at the top */
-  top: 6%; /* Align to the top */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Adjust for exact centering */
-  width: 50%; /* Set the desired width */
-  z-index: 1000; /* Ensure it's above other elements */
-}
-
-.slide-in {
-  transform: translateY(0);
-  height: auto;
-  margin: 1.2rem; /* Apply the margin when sliding in */
+  position: fixed;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  z-index: 1000;
 }
 
 header {
@@ -75,9 +70,9 @@ header {
   padding-left: 22%;
   padding-top: 0.85%;
   display: flex;
-  justify-content: space-between; /* Distribute items evenly */
-  width: 280%; /* Occupy 90% of the header space */
-  margin: 0 auto; /* Center the navigation in the header */
+  justify-content: space-between;
+  width: 280%;
+  margin: 0 auto;
   z-index: 1;
 }
 
