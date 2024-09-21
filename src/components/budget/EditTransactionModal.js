@@ -53,9 +53,7 @@ export default function DeleteTransactionConfirmationModal({
   );
   const [updatedTransactionCategory, setUpdatedTransactionCategory] =
     useState();
-
   const [categories, setCategories] = useState([]);
-
   const toast = useToast();
 
   useEffect(() => {
@@ -76,18 +74,25 @@ export default function DeleteTransactionConfirmationModal({
     onOpen();
   }, [onOpen]);
 
-  const updateTransaction = async (id) => { // Async function used to edit a transaction's fields in the database
-    if ( // If any transaction fields are undefined, the client is informed (lines 143-150) and the execution of updateTransaction is terminated (in line 151) 
-      // If all fields are defined, then input validation starts from line 83
+  const formatAmount = (val) => {
+    return isNaN(val) || val === 0 ? `₹0` : `₹${Number(val).toLocaleString()}`;
+  };
+
+  const parseAmount = (val) => {
+    return parseFloat(val.replace(/₹/g, "").replace(/,/g, ""));
+  };
+
+  const updateTransaction = async (id) => {
+    if (
       updatedTransactionAmount !== undefined &&
       updatedTransactionDate !== undefined &&
       updatedTransactionName !== undefined &&
-      updatedTransactionCategory !== undefined && updatedTransactionCategory !== ""
+      updatedTransactionCategory !== undefined &&
+      updatedTransactionCategory !== ""
     ) {
-      const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/; // Used to check the format of the updated date the client has inputted
+      const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
 
-      if (!dateRegex.test(updatedTransactionDate)) { // If the new date doesn't follow the format specified by the dateRegex (should be MM/DD/YYYY), the client is informed (lines 87-95) and the execution of
-         // updateTransaction is terminated (in line 96)
+      if (!dateRegex.test(updatedTransactionDate)) {
         toast({
           title: "Oops!",
           description:
@@ -100,7 +105,7 @@ export default function DeleteTransactionConfirmationModal({
         return;
       }
 
-      if (updatedTransactionName.length > 20) { // If the new transaction name is longer than 20 characters, then the client is informed (lines 102-109) and the execution of updateTransaction is terminated (in line 110)
+      if (updatedTransactionName.length > 20) {
         toast({
           title: "Oops!",
           description:
@@ -113,9 +118,21 @@ export default function DeleteTransactionConfirmationModal({
         return;
       }
 
-      const transactionDoc = doc(db, "transactions", id); // The specific transaction doc that the client is editing - it is used in the updateDoc function in the try block below
+      if (updatedTransactionAmount > 100000) {
+        toast({
+          title: "Oops!",
+          description: "Transaction amount cannot exceed ₹1,00,000.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+          variant: "left-accent",
+        });
+        return;
+      }
 
-      try { // updateDoc Firestore function is executed within this try block after the client's inputs are validated and the catch block executes in the event of an error
+      const transactionDoc = doc(db, "transactions", id);
+
+      try {
         await updateDoc(transactionDoc, {
           amount: parseFloat(updatedTransactionAmount),
           dateAdded: Timestamp.fromDate(new Date(updatedTransactionDate)),
@@ -143,8 +160,8 @@ export default function DeleteTransactionConfirmationModal({
           variant: "left-accent",
         });
       }
-    } else { // Executes if any of the fields are empty (undefined)
-      toast({ // The client is informed to fill out all the fields (lines 146-153) and the execution of updateTransaction is terminated (in line 154)
+    } else {
+      toast({
         title: "Oops!",
         description: "Please fill out all the fields.",
         status: "warning",
@@ -198,11 +215,12 @@ export default function DeleteTransactionConfirmationModal({
                 <FormLabel htmlFor="transaction_amount">Amount</FormLabel>
                 <Input
                   id="transaction_amount"
-                  type="number"
+                  type="text"
                   placeholder="Enter amount"
-                  value={updatedTransactionAmount}
-                  onChange={(e) => setTransactionAmount(e.target.value)}
-                  max="100000"
+                  value={formatAmount(updatedTransactionAmount)}
+                  onChange={(e) =>
+                    setTransactionAmount(parseAmount(e.target.value))
+                  }
                 />
               </FormControl>
 
