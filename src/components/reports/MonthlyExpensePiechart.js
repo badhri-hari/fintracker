@@ -66,7 +66,7 @@ export default function MonthlyExpensePiechart({ year }) {
       const categoriesSnapshot = await getDocs(collection(db, "categories"));
       const categories = {};
       categoriesSnapshot.forEach((doc) => {
-        categories[doc.id] = doc.data().name;
+        categories[doc.id] = doc.data().categoryName;
       });
 
       const transactionsRef = query(

@@ -63,52 +63,58 @@ export default function MonthlyIncomePiechart({ year }) {
     const endOfMonth = new Date(year, selectedMonth + 1, 0);
 
     const fetchCategoriesAndTransactions = async () => {
-      const categoriesSnapshot = await getDocs(collection(db, "categories"));
-      const categories = {};
-      categoriesSnapshot.forEach((doc) => {
-        categories[doc.id] = doc.data().name;
-      });
+      try {
+        const categoriesSnapshot = await getDocs(collection(db, "categories"));
+        const categories = {};
 
-      const transactionsRef = query(
-        collection(db, "transactions"),
-        where("userId", "==", auth?.currentUser?.uid),
-        where("dateAdded", ">=", startOfMonth),
-        where("dateAdded", "<=", endOfMonth)
-      );
-
-      const unsubscribeFirestore = onSnapshot(transactionsRef, (snapshot) => {
-        const amountsByCategory = {};
-
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.amount > 0) {
-            const categoryName = categories[data.categoryId] || "Uncategorized";
-            amountsByCategory[categoryName] =
-              (amountsByCategory[categoryName] || 0) + data.amount;
-          }
+        categoriesSnapshot.forEach((doc) => {
+          categories[doc.id] = doc.data().categoryName;
         });
 
-        const chartCategories = Object.keys(amountsByCategory);
-        const amounts = chartCategories.map(
-          (category) => amountsByCategory[category]
+        const transactionsRef = query(
+          collection(db, "transactions"),
+          where("userId", "==", auth?.currentUser?.uid),
+          where("dateAdded", ">=", startOfMonth),
+          where("dateAdded", "<=", endOfMonth)
         );
 
-        const newChartData = {
-          labels: chartCategories,
-          datasets: [
-            {
-              data: amounts,
-              backgroundColor: ["#4CAF50", "#8BC34A", "#CDDC39", "#66BB6A"],
-            },
-          ],
+        const unsubscribeFirestore = onSnapshot(transactionsRef, (snapshot) => {
+          const amountsByCategory = {};
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+
+            if (data.amount > 0) {
+              const categoryName =
+                categories[data.categoryId] || "Uncategorized";
+              amountsByCategory[categoryName] =
+                (amountsByCategory[categoryName] || 0) + data.amount;
+            }
+          });
+
+          const chartCategories = Object.keys(amountsByCategory);
+          const amounts = chartCategories.map(
+            (category) => amountsByCategory[category]
+          );
+
+          const newChartData = {
+            labels: chartCategories,
+            datasets: [
+              {
+                data: amounts,
+                backgroundColor: ["#4CAF50", "#8BC34A", "#CDDC39", "#66BB6A"],
+              },
+            ],
+          };
+
+          setChartData(newChartData);
+        });
+
+        return () => {
+          unsubscribeFirestore();
         };
-
-        setChartData(newChartData);
-      });
-
-      return () => {
-        unsubscribeFirestore();
-      };
+      } catch (error) {
+        console.error("Error fetching categories and transactions: ", error);
+      }
     };
 
     fetchCategoriesAndTransactions();
