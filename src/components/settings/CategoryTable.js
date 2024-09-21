@@ -129,6 +129,18 @@ export default function CategoryTable() {
       return;
     }
 
+    if (editingCategoryName.length > 25) {
+      toast({
+        title: "Oops!",
+        description: "The category's name cannot be more than 25 characters.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        variant: "left-accent",
+      });
+      return;
+    }
+
     const categoryRef = doc(db, "categories", categoryId);
     const batch = writeBatch(db);
 
