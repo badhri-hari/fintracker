@@ -52,7 +52,7 @@ export default function DeleteTransactionConfirmationModal({
     formatDate(transactionDate)
   );
   const [updatedTransactionCategory, setUpdatedTransactionCategory] =
-    useState(transactionCategory);
+    useState();
 
   const [categories, setCategories] = useState([]);
 
@@ -202,6 +202,7 @@ export default function DeleteTransactionConfirmationModal({
                   placeholder="Enter amount"
                   value={updatedTransactionAmount}
                   onChange={(e) => setTransactionAmount(e.target.value)}
+                  max="100000"
                 />
               </FormControl>
 
