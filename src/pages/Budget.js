@@ -147,11 +147,11 @@ export default function Budget() {
       }
     }
 
-    if (selectedCategory) {
-      transactionsQuery = query(
-        transactionsQuery,
-        where("categoryId", "==", selectedCategory)
-      );
+    if (selectedCategory) { // If the client has selected a category in CategoryFilter component
+      transactionsQuery = query( // transactionsQuery is the combined query that is sent to the database for transactions filtering
+        transactionsQuery, // The query function as it is now
+        where("categoryId", "==", selectedCategory) // Add this filter to the query so that only transactions within
+      );                                            // this category are displayed
     }
 
     transactionsQuery = query(
