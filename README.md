@@ -2,3 +2,5 @@
 2. Navigate to the product directory in the terminal.
 3. Execute the command `npm install` and wait for the dependencies to be installed.
 4. Execute the command `npm start` to open the application (internet connection required for operation).
+
+I got a 6/7 in CS overall in the N24 series (my school did not give component scores).
