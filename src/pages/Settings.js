@@ -49,8 +49,9 @@ export default function Settings() {
             textAlign: "center",
             width: "100%",
             backgroundColor: "transparent",
+            marginBottom: "25px",
           }}
-        ></footer>
+        ><a href="https://github.com/badhri-hari" target="_blank" rel="noreferrer">i made this, click on me</a></footer>
       </Flex>
     </>
   );

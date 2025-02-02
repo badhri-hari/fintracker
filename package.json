@@ -54,7 +54,7 @@
   "description": "A simple budgeting app created for the IBDP CS IA assessment project.",
   "main": "main.js",
   "keywords": [],
-  "author": "Badhri N Hari",
+  "author": "Badhri N. Hari",
   "license": "ISC",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
