@@ -53,6 +53,46 @@ const Quotes = () => {
         source: "[deleted]",
         link: "https://www.reddit.com/r/IBO/comments/11yxti9/comment/jdc8bn4",
       },
+      {
+        text: "You’re definitely a 44 because I’m the 1 you need",
+        source: "Andrinhaa",
+        link: "https://www.reddit.com/r/IBO/comments/10tk37o/comment/j77sest",
+      },
+      {
+        text: "Are you practicing your Individual Oral? Because you can practice it on me ;)",
+        source: "[deleted]",
+        link: "https://www.reddit.com/r/IBO/comments/10tk37o/comment/j77tv1m",
+      },
+      {
+        text: "10? you’re definitely a 45",
+        source: "MacaroonTop2612",
+        link: "https://www.reddit.com/r/IBO/comments/10tk37o/comment/j77o75p",
+      },
+      {
+        text: "i’m done revising graphs, lemme study your curves instead",
+        source: "bkat_112",
+        link: "https://www.reddit.com/r/IBO/comments/10tk37o/comment/j7a6nqi",
+      },
+      {
+        text: "Your 23 and my 22 were not good enough but together we add up to perfection",
+        source: "Icy-Yoghurt-3347",
+        link: "https://www.reddit.com/r/IBO/comments/10tk37o/comment/j79wasa",
+      },
+      {
+        text: "choosing the right topic for an IA is hard, but you know what’s harder?",
+        source: "East_Company_7185",
+        link: "https://www.reddit.com/r/IBO/comments/10tk37o/comment/j7h47u8",
+      },
+      {
+        text: "can’t spell ibuprofen without ib",
+        source: "SquillTheSquid9",
+        link: "https://www.reddit.com/r/IBO/comments/yf9zvq/comment/iu7c6mo",
+      },
+      {
+        text: "One blind leads the other.",
+        source: "Ramya ma'am 🗣️",
+        link: "",
+      },
     ],
     []
   );
