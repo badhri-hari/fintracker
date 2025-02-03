@@ -90,7 +90,7 @@ const Quotes = () => {
       },
       {
         text: "One blind leads the other.",
-        source: "Ramya ma'am 🗣️",
+        source: "Ramya ma'am",
         link: "",
       },
     ],
