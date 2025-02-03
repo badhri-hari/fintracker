@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import LoginAlert from "../components/LoginAlert";
+import LoginAlert from "../components/signin/LoginAlert";
+import Quotes from "../components/signin/Quotes";
 import { useNavigate } from "react-router-dom";
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { auth, googleAuthProvider } from "../config/firebase";
@@ -46,22 +47,29 @@ export default function SignUp() {
             src={require("../styles/logo.png")}
           />
         </div>
-        <div className="login-screen-button-container">
+        <div>
           {isLoggedIn === false ? (
-            <button onClick={googleSignIn}>
-              <img
-                className="login-screen-button"
-                alt="sign up with google button"
-                src={require("../styles/google_sign_in_button.png")}
-              />
-            </button>
+            <div>
+              <div className="login-screen-button-container">
+                <button onClick={googleSignIn}>
+                  <img
+                    className="login-screen-button"
+                    alt="sign up with google button"
+                    src={require("../styles/google_sign_in_button.png")}
+                  />
+                </button>
+              </div>
+              <Quotes />
+            </div>
           ) : isLoggedIn === null ? (
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              colorScheme="whatsapp"
-              size="xl"
-            />
+            <div className="login-screen-button-container">
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                colorScheme="whatsapp"
+                size="xl"
+              />
+            </div>
           ) : null}
         </div>
         <LoginAlert isLoggedIn={isLoggedIn} message={errorMessage} />

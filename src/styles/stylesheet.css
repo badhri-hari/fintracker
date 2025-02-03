@@ -5,13 +5,13 @@
 .login-screen-body {
   background-color: #528265;
   height: 100vh;
-  padding-top: 4%;
 }
 
 .login-screen-logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: -10px;
 }
 
 .login-screen-logo {
@@ -34,6 +34,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
+  margin-bottom: 60px;
 }
 
 .login-screen-button {
@@ -238,4 +239,43 @@ nav {
 @font-face {
   font-family: "Montserrat";
   src: url(./montserrat_file.ttf);
+}
+
+.quote-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.quote-box {
+  display: flex;
+  align-items: flex-start;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #2e4a39;
+  border-radius: 8px;
+}
+
+.quote-line {
+  width: 5px;
+  height: 100%;
+  background-color: #888888;
+  margin-right: 1px;
+}
+
+.quote-text {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.quote-source {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #bbbbbb;
+}
+
+.quote-source a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: #bbbbbb;
 }

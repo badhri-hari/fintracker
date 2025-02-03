@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "../styles/stylesheet.css";
 import { Alert, AlertIcon } from "@chakra-ui/react";
 
 const LoginAlert = ({ isLoggedIn, message }) => {

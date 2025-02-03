@@ -51,7 +51,7 @@ export default function Settings() {
             backgroundColor: "transparent",
             marginBottom: "25px",
           }}
-        ><a href="https://github.com/badhri-hari" target="_blank" rel="noreferrer">i made this, click on me</a></footer>
+        ><a href="https://github.com/badhri-hari" target="_blank" rel="noreferrer">:D</a></footer>
       </Flex>
     </>
   );
