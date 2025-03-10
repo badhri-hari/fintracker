@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ThemeProvider } from "./components/settings/ThemeContext";
+import { Analytics } from "@vercel/analytics/react";
 
 import Home from "./pages/Home";
 import Budget from "./pages/Budget";
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="settings" element={<Settings />} />
             <Route path="*" element={<Home />} />
           </Routes>
+          <Analytics />
         </Router>
       </ThemeProvider>
     </ChakraProvider>
