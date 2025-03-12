@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/styles/logo.png" alt="Fintracker Logo">
+  <img src="./public/styles/logo.png" alt="Fintracker Logo" height="400" width="550">
 </p>
 
 This repository contains all the files from my IBDP CS (SL) IA. Packages may stop functioning at any time due to their outdated versions, *let me know if this happens.*
